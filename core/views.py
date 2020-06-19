@@ -152,8 +152,8 @@ class MLoperations(APIView):
                 Knn = {
                 'model' : 'KNN' ,    
                 'acc' : round(acc,2) ,
-                'DIdesicionTreeRace' : round(DIkNNRace,2) ,
-                'DIrandomTreeGender' : round(DIkNNGender,2)    
+                'DIkNNRace' : round(DIkNNRace,2) ,
+                'DIkNNGender' : round(DIkNNGender,2)    
                 }
                 
                 goin.append(Knn)
@@ -175,8 +175,8 @@ class MLoperations(APIView):
                 NB = {
                 'model' : 'NB' ,    
                 'acc' : round(acc,2) ,
-                'DIdesicionTreeRace' : round(DInaiveBayesRace,2) ,
-                'DIrandomTreeGender' : round(DInaiveBayesGender,2)    
+                'DInaiveBayesRace' : round(DInaiveBayesRace,2) ,
+                'DInaiveBayesGender' : round(DInaiveBayesGender,2)    
                 }
                 goin.append(NB)
 
@@ -197,8 +197,8 @@ class MLoperations(APIView):
                 Adaboost = {
                 'model' : 'ABoost' ,    
                 'acc' : round(acc,2) ,
-                'DIdesicionTreeRace' : round(DIadaBoostRace,2) ,
-                'DIrandomTreeGender' : round(DIadaBoostGender,2)    
+                'DIadaBoostRace' : round(DIadaBoostRace,2) ,
+                'DIadaBoostGender' : round(DIadaBoostGender,2)    
                 }
 
                 goin.append(Adaboost)
@@ -221,8 +221,8 @@ class MLoperations(APIView):
                 SVM = {
                 'model' : 'SVM' ,    
                 'acc' : round(acc,2) ,
-                'DIdesicionTreeRace' : round(DISVMRACE,2) ,
-                'DIrandomTreeGender' : round(DISVMGender,2)    
+                'DISVMRACE' : round(DISVMRACE,2) ,
+                'DISVMGender' : round(DISVMGender,2)    
                 }
 
                 goin.append(SVM)
