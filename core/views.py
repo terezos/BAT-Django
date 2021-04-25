@@ -41,7 +41,7 @@ class CompasRaceDistribution(APIView):
     def get(self,request,*args,**kwargs):
         values = df['race'].value_counts()
         data = {
-                'Black' : round((values[0]/len(df)) * 100,2) ,
+                'African-American' : round((values[0]/len(df)) * 100,2) ,
                 'Caucasian' : round((values[1]/len(df)) * 100,2),
                 'Hispanic' : round((values[2]/len(df)) * 100,2),
                 'Other' : round((values[3]/len(df)) * 100,2),
