@@ -86,8 +86,8 @@ class CompasMLoperations(APIView):
                 LR = {
                 'model' : 'LR' ,    
                 'acc' : round(acc,2) ,
-                'DIlogisticRegRace' : round(DIRACECOMPAS,2) ,
-                'DIlogisticRegGender' : round(DIGENDERCOMPAS,2)
+                'DIRegRace' : round(DIRACECOMPAS,2) ,
+                'DIRegGender' : round(DIGENDERCOMPAS,2)
                 
                 }
                 goin.append(LR)
@@ -110,8 +110,8 @@ class CompasMLoperations(APIView):
                 RF = {
                 'model' : 'RF' ,    
                 'acc' : round(acc,2) ,
-                'DIrandomForestRace' : round(DIrandomForestRace,2) ,
-                'DIrandomForestGender' : round(DIrandomForestGender,2)    
+                'DIRace' : round(DIrandomForestRace,2) ,
+                'DIGender' : round(DIrandomForestGender,2)    
                 }
                 goin.append(RF)
 
@@ -132,8 +132,8 @@ class CompasMLoperations(APIView):
                 DTree = {
                 'model' : 'DT' ,    
                 'acc' : round(acc,2) ,
-                'DIdesicionTreeRace' : round(DIdesicionTreeRace,2) ,
-                'DIrandomTreeGender' : round(DIrandomTreeGender,2)    
+                'DIRace' : round(DIdesicionTreeRace,2) ,
+                'DIGender' : round(DIrandomTreeGender,2)    
                 }
 
                 goin.append(DTree)
@@ -155,8 +155,8 @@ class CompasMLoperations(APIView):
                 Knn = {
                 'model' : 'KNN' ,    
                 'acc' : round(acc,2) ,
-                'DIkNNRace' : round(DIkNNRace,2) ,
-                'DIkNNGender' : round(DIkNNGender,2)    
+                'DIRace' : round(DIkNNRace,2) ,
+                'DIGender' : round(DIkNNGender,2)    
                 }
                 
                 goin.append(Knn)
@@ -178,8 +178,8 @@ class CompasMLoperations(APIView):
                 NB = {
                 'model' : 'NB' ,    
                 'acc' : round(acc,2) ,
-                'DInaiveBayesRace' : round(DInaiveBayesRace,2) ,
-                'DInaiveBayesGender' : round(DInaiveBayesGender,2)    
+                'DIRace' : round(DInaiveBayesRace,2) ,
+                'DIGender' : round(DInaiveBayesGender,2)    
                 }
                 goin.append(NB)
 
@@ -200,8 +200,8 @@ class CompasMLoperations(APIView):
                 Adaboost = {
                 'model' : 'ABoost' ,    
                 'acc' : round(acc,2) ,
-                'DIadaBoostRace' : round(DIadaBoostRace,2) ,
-                'DIadaBoostGender' : round(DIadaBoostGender,2)    
+                'DIRace' : round(DIadaBoostRace,2) ,
+                'DIGender' : round(DIadaBoostGender,2)    
                 }
 
                 goin.append(Adaboost)
@@ -224,8 +224,8 @@ class CompasMLoperations(APIView):
                 SVM = {
                 'model' : 'SVM' ,    
                 'acc' : round(acc,2) ,
-                'DISVMRACE' : round(DISVMRACE,2) ,
-                'DISVMGender' : round(DISVMGender,2)    
+                'DIRACE' : round(DISVMRACE,2) ,
+                'DIGender' : round(DISVMGender,2)    
                 }
 
                 goin.append(SVM)
