@@ -86,8 +86,8 @@ class CompasMLoperations(APIView):
                 LR = {
                 'model' : 'LR' ,    
                 'acc' : round(acc,2) ,
-                'DIRegRace' : round(DIRACECOMPAS,2) ,
-                'DIRegGender' : round(DIGENDERCOMPAS,2)
+                'DIRace' : round(DIRACECOMPAS,2) ,
+                'DIGender' : round(DIGENDERCOMPAS,2)
                 
                 }
                 goin.append(LR)
@@ -224,7 +224,7 @@ class CompasMLoperations(APIView):
                 SVM = {
                 'model' : 'SVM' ,    
                 'acc' : round(acc,2) ,
-                'DIRACE' : round(DISVMRACE,2) ,
+                'DIRace' : round(DISVMRACE,2) ,
                 'DIGender' : round(DISVMGender,2)    
                 }
 
