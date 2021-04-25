@@ -84,7 +84,7 @@ class CompasMLoperations(APIView):
                 lr_pr_unpriv_gend = calc_prop(pred_gender_df,"sex",'Male',"Prediction",1) 
                 DIGENDERCOMPAS = lr_pr_unpriv_gend / lr_pr_priv_gend
                 LR = {
-                'model' : 'LR' ,    
+                'model' : 'Logistic Regression' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DIRACECOMPAS,2) ,
                 'DIGender' : round(DIGENDERCOMPAS,2)
@@ -108,7 +108,7 @@ class CompasMLoperations(APIView):
                 lr_pr_unpriv_gend = calc_prop(pred_gender_df,"sex",'Male',"Prediction",1) 
                 DIrandomForestGender = lr_pr_unpriv_gend / lr_pr_priv_gend
                 RF = {
-                'model' : 'RF' ,    
+                'model' : 'Random Forest' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DIrandomForestRace,2) ,
                 'DIGender' : round(DIrandomForestGender,2)    
@@ -130,7 +130,7 @@ class CompasMLoperations(APIView):
                 DIrandomTreeGender = lr_pr_unpriv_gend / lr_pr_priv_gend
 
                 DTree = {
-                'model' : 'DT' ,    
+                'model' : 'Desicion Tree' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DIdesicionTreeRace,2) ,
                 'DIGender' : round(DIrandomTreeGender,2)    
@@ -176,7 +176,7 @@ class CompasMLoperations(APIView):
                 DInaiveBayesGender = lr_pr_unpriv_gend / lr_pr_priv_gend
 
                 NB = {
-                'model' : 'NB' ,    
+                'model' : 'Naive Bayes' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DInaiveBayesRace,2) ,
                 'DIGender' : round(DInaiveBayesGender,2)    
@@ -198,7 +198,7 @@ class CompasMLoperations(APIView):
                 DIadaBoostGender = lr_pr_unpriv_gend / lr_pr_priv_gend
 
                 Adaboost = {
-                'model' : 'ABoost' ,    
+                'model' : 'AdaBoost' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DIadaBoostRace,2) ,
                 'DIGender' : round(DIadaBoostGender,2)    
