@@ -311,17 +311,17 @@ class GermanMLoperations(APIView):
         pred_df = pd.DataFrame({"Age_cat":df_credit["Age_cat"],"Prediction":preds})
         lr_pr_unpriv = calc_prop(pred_df,"Age_cat",1,"Prediction",1)
         lr_pr_priv = calc_prop(pred_df,"Age_cat",0,"Prediction",1)
-        DIRAGECOMPAS = lr_pr_unpriv / lr_pr_priv
+        DIRAGELR = lr_pr_unpriv / lr_pr_priv
 
         pred_gender_df = pd.DataFrame({"Sex_male":df_credit["Sex_male"],"Prediction":preds})
         lr_pr_priv_gend = calc_prop(pred_gender_df,"Sex_male",1,"Prediction",1)
         lr_pr_unpriv_gend = calc_prop(pred_gender_df,"Sex_male",0,"Prediction",1) 
-        DIGENDERCOMPAS = lr_pr_unpriv_gend / lr_pr_priv_gend
+        DIGENDERLR = lr_pr_unpriv_gend / lr_pr_priv_gend
         LR = {
         'model' : 'LR' ,    
         'acc' : round(acc,2) ,
-        'DIlogisticRegAGE' : round(DIRAGECOMPAS,2) ,
-        'DIlogisticRegGender' : round(DIGENDERCOMPAS,2)
+        'DIAGE' : round(DIRAGELR,2) ,
+        'DIGender' : round(DIGENDERLR,2)
 
         }
 
@@ -347,8 +347,8 @@ class GermanMLoperations(APIView):
         RF = {
         'model' : 'RF' ,    
         'acc' : round(acc,2) ,
-        'DIrandomForestAge' : round(DIrandomForestAge,2) ,
-        'DIrandomForestGender' : round(DIrandomForestGender,2)    
+        'DIAGE' : round(DIrandomForestAge,2) ,
+        'DIGender' : round(DIrandomForestGender,2)    
         }
         goin.append(RF)
 
@@ -370,8 +370,8 @@ class GermanMLoperations(APIView):
         DTree = {
         'model' : 'DT' ,    
         'acc' : round(acc,2) ,
-        'DIdesicionTreeAge' : round(DIdesicionTreeAge,2) ,
-        'DIrandomTreeGender' : round(DIrandomTreeGender,2)    
+        'DIAGE' : round(DIdesicionTreeAge,2) ,
+        'DIGender' : round(DIrandomTreeGender,2)    
         }
 
         goin.append(DTree)
@@ -395,8 +395,8 @@ class GermanMLoperations(APIView):
         Knn = {
         'model' : 'KNN' ,    
         'acc' : round(acc,2) ,
-        'DIkNNAge' : round(DIkNNAge,2) ,
-        'DIkNNGender' : round(DIkNNGender,2)    
+        'DIAGE' : round(DIkNNAge,2) ,
+        'DIGender' : round(DIkNNGender,2)    
         }
         
         goin.append(Knn)
@@ -419,8 +419,8 @@ class GermanMLoperations(APIView):
         NB = {
         'model' : 'NB' ,    
         'acc' : round(acc,2) ,
-        'DInaiveBayesAge' : round(DInaiveBayesAge,2) ,
-        'DInaiveBayesGender' : round(DInaiveBayesGender,2)    
+        'DIAGE' : round(DInaiveBayesAge,2) ,
+        'DIGender' : round(DInaiveBayesGender,2)    
         }
         goin.append(NB)
 
@@ -442,8 +442,8 @@ class GermanMLoperations(APIView):
         Adaboost = {
         'model' : 'ABoost' ,    
         'acc' : round(acc,2) ,
-        'DIadaBoostAge' : round(DIadaBoostAge,2) ,
-        'DIadaBoostGender' : round(DIadaBoostGender,2)    
+        'DIAGE' : round(DIadaBoostAge,2) ,
+        'DIGender' : round(DIadaBoostGender,2)    
         }
 
         goin.append(Adaboost)
@@ -467,8 +467,8 @@ class GermanMLoperations(APIView):
         SVM = {
         'model' : 'SVM' ,    
         'acc' : round(acc,2) ,
-        'DISVMAge' : round(DISVMAge,2) ,
-        'DISVMGender' : round(DISVMGender,2)    
+        'DIAGE' : round(DISVMAge,2) ,
+        'DIGender' : round(DISVMGender,2)    
         }
 
         goin.append(SVM)
