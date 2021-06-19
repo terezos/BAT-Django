@@ -257,6 +257,17 @@ class GermanBadAndGoodDistribution(APIView):
 
         return Response(badgood_data)
 
+class CustomDatasetMloperation(APIView):
+
+    def get(self,request,*args,**kwargs):
+        return request
+        # return goin = [ {
+        #     'model' : 'LR' ,    
+        #     'acc' : round(acc,2) ,
+        #     'DIAGE' : round(DIRAGELR,2) ,
+        #     'DIGender' : round(DIGENDERLR,2)
+
+        #     }]
 
 class GermanMLoperations(APIView):
 
