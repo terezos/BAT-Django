@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
-from core.views import CompasRaceDistribution,CompasGenderDistribution,CompasMLoperations,GermanGenderDistribution,GermanBadAndGoodDistribution,GermanMLoperations
+from core.views import CompasRaceDistribution,CompasGenderDistribution,CompasMLoperations,GermanGenderDistribution,GermanBadAndGoodDistribution,GermanMLoperations,CustomDatasetMloperation
 
 
 
