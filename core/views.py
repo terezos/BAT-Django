@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 import os.path
+import json
 from django.shortcuts import render
 import pandas as pd
 from rest_framework.views import APIView
@@ -22,6 +23,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn import preprocessing
 from sklearn.svm import SVC
 from sklearn.pipeline import make_pipeline
+from django.http import HttpResponse
 from sklearn.preprocessing import StandardScaler
 
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -36,6 +38,8 @@ df = raw_data[((raw_data['days_b_screening_arrest'] <=30) &
 df_encoded = pd.read_csv("https://raw.githubusercontent.com/adebayoj/fairml/master/doc/example_notebooks/propublica_data_for_fairml.csv")
 
 
+def article_detail(request):
+    return Response('1')
 
 class CompasRaceDistribution(APIView):
     def get(self,request,*args,**kwargs):
@@ -76,10 +80,10 @@ class CompasMLoperations(APIView):
                 acc = model.score(test_x,test_y)
                 preds = model.predict(data)
                 pred_df = pd.DataFrame({"race":df["race"],"Prediction":preds})
-                pred_gender_df = pd.DataFrame({"sex":df["sex"],"Prediction":preds})
                 lr_pr_unpriv = calc_prop(pred_df,"race",'African-American',"Prediction",1)
                 lr_pr_priv = calc_prop(pred_df,"race",'Caucasian',"Prediction",1)
                 DIRACECOMPAS = lr_pr_unpriv / lr_pr_priv
+                pred_gender_df = pd.DataFrame({"sex":df["sex"],"Prediction":preds})
                 lr_pr_priv_gend = calc_prop(pred_gender_df,"sex",'Female',"Prediction",1)
                 lr_pr_unpriv_gend = calc_prop(pred_gender_df,"sex",'Male',"Prediction",1) 
                 DIGENDERCOMPAS = lr_pr_unpriv_gend / lr_pr_priv_gend
@@ -259,21 +263,65 @@ class GermanBadAndGoodDistribution(APIView):
 
 class CustomDatasetMloperation(APIView):
 
-    def get(self,request,*args,**kwargs):
-        return request
-        # return goin = [ {
-        #     'model' : 'LR' ,    
-        #     'acc' : round(acc,2) ,
-        #     'DIAGE' : round(DIRAGELR,2) ,
-        #     'DIGender' : round(DIGENDERLR,2)
+    def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged):
+        
+        url="https://server3-test.herokuapp.com/files/" + filename + '.csv' 
+        df_credit = pd.read_csv(url)
+        df_credit_not_encoded = df_credit
+        df_credit = df_credit.drop(df_credit.columns[0], axis=1) 
+        
+        values = df_credit[analysis].value_counts()
+        willReturn = {}
+        data = {}
+        for i in range(len(values)):
+            data[values.index[i]] = round((values[0]/len(df_credit)) * 100,2)
+        
+        willReturn['analysis'] = data
+        target_col = df_credit.pop(target)
+        df_credit.insert(len(df_credit.columns), target, target_col)
+        
 
-        #     }]
+        for column in df_credit:
+            df_credit[column] = df_credit[column].fillna('no_inf')
+        
+        old_columns = list(df_credit)
+        for column in df_credit:
+            df_credit = df_credit.merge(pd.get_dummies(df_credit[column], drop_first=True, prefix=column+'_new'), left_index=True, right_index=True)
+    
+        for cols in old_columns:
+            del df_credit[cols] 
+        
+        data = df_credit.drop(df_credit.columns[len(df_credit.columns) -1 ],axis=1)
+        y = df_credit[df_credit.columns[len(df_credit.columns)-1 ]]
+        train_x, test_x, train_y, test_y = train_test_split(data, y, test_size=0.25, shuffle=True, random_state=42)
+        
+        
+        # LOGISTIC REGRESSION
+        lr = LogisticRegression()
+        model = lr.fit(train_x,train_y)
+        acc = model.score(test_x,test_y)
+        preds = model.predict(data)
+    
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DILR = lr_pr_unpriv / lr_pr_priv
+
+        LR = {
+        'model' : 'LR' ,    
+        'acc' : round(acc,2) ,
+        'DILR' : round(DILR,2) ,
+        }
+        return Response(LR)
+        # return HttpResponse(url)
+        # return Response ()
 
 class GermanMLoperations(APIView):
 
     def get(self,request,*args,**kwargs):
         goin = []
         df_credit = pd.read_csv(SITE_ROOT + '/csvs/german_credit_data.csv')
+        df_credit.drop(df_credit.columns[0], axis=1) 
         df_credit['Saving accounts'] = df_credit['Saving accounts'].fillna('no_inf')
         df_credit['Checking account'] = df_credit['Checking account'].fillna('no_inf')
 

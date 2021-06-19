@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path,include
+from django.conf.urls import url
 from core.views import CompasRaceDistribution,CompasGenderDistribution,CompasMLoperations,GermanGenderDistribution,GermanBadAndGoodDistribution,GermanMLoperations,CustomDatasetMloperation
 
 
@@ -13,5 +14,5 @@ urlpatterns = [
     path('credit-risk/gender',GermanGenderDistribution.as_view(),name= 'german-gender'),
     path('credit-risk/bad-good',GermanBadAndGoodDistribution.as_view(),name= 'german-badgood'),
     path('German/Ml',GermanMLoperations.as_view(),name='GermanmachineLearning'),
-    path('custom/<filename>/<target>/<privileged>/<unprivileged>',CustomDatasetMloperation.as_view(),name='custom-dataset'),
+    url(r'^custom/(?P<filename>[\w-]+)/(?P<sensitive>[\w-]+)/(?P<analysis>[\w-]+)/(?P<target>[\w-]+)/(?P<privileged>[\w-]+)/(?P<unprivileged>[\w-]+)/$',CustomDatasetMloperation.as_view()),
 ]
