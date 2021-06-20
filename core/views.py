@@ -264,7 +264,7 @@ class GermanBadAndGoodDistribution(APIView):
 class CustomDatasetMloperation(APIView):
 
     def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged):
-        
+       
         url="https://server3-test.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
         df_credit_not_encoded = df_credit
@@ -301,18 +301,29 @@ class CustomDatasetMloperation(APIView):
         model = lr.fit(train_x,train_y)
         acc = model.score(test_x,test_y)
         preds = model.predict(data)
-    
+        
+        answerUn = unprivileged.isnumeric()
+        answerPr = privileged.isnumeric()
+
+        if(answerUn):
+            unprivileged = int(unprivileged)
+
+        if(answerPr):
+            privileged = int(privileged)
+        
         pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        
         lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        
         lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
         DILR = lr_pr_unpriv / lr_pr_priv
-
+        
         willReturn['LR'] = {
         'model' : 'LR' ,    
         'acc' : round(acc,2) ,
         'disparate_impact' : round(DILR,2) ,
         }
-
+        
         model = RandomForestClassifier(n_estimators=100, 
                     bootstrap = True,
                     max_features = 'sqrt')
