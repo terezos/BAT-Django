@@ -310,7 +310,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['LR'] = {
         'model' : 'LR' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DILR,2) ,
+        'disparate_impact' : round(DILR,2) ,
         }
 
         model = RandomForestClassifier(n_estimators=100, 
@@ -328,7 +328,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['RF'] = {
         'model' : 'RF' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DIRANDOMFOREST,2) ,   
+        'disparate_impact' : round(DIRANDOMFOREST,2) ,   
         }
         
 
@@ -346,7 +346,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['DTree'] = {
         'model' : 'DT' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DITree,2)    
+        'disparate_impact' : round(DITree,2)    
         }
 
 
@@ -364,7 +364,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['KNN']  = {
         'model' : 'KNN' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DIkNN,2),  
+        'disparate_impact' : round(DIkNN,2),  
         }
       
         ## Naive Bayes
@@ -380,7 +380,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['NB'] = {
         'model' : 'NB' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DInaiveBayes,2) ,  
+        'disparate_impact' : round(DInaiveBayes,2) ,  
         }
     
 
@@ -397,7 +397,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['ABoost'] = {
         'model' : 'ABoost' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DIadaBoost,2), 
+        'disparate_impact' : round(DIadaBoost,2), 
         }
 
 
@@ -414,7 +414,7 @@ class CustomDatasetMloperation(APIView):
         willReturn['SVM'] = {
         'model' : 'SVM' ,    
         'acc' : round(acc,2) ,
-        'disparate impact' : round(DISVM,2),  
+        'disparate_impact' : round(DISVM,2),  
         }
 
         return Response(willReturn)
