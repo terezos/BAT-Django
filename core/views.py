@@ -274,7 +274,7 @@ class CustomDatasetMloperation(APIView):
         willReturn = {}
         data = {}
         for i in range(len(values)):
-            data[values.index[i]] = round((values[0]/len(df_credit)) * 100,2)
+            data[values.index[i]] = round((values[i]/len(df_credit)) * 100,2)
         
         willReturn['analysis'] = data
         target_col = df_credit.pop(target)
