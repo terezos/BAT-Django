@@ -265,7 +265,7 @@ class CustomDatasetMloperation(APIView):
 
     def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged):
         
-        url="https://server3-test.herokuapp.com/files/" + filename + '.csv' 
+        url="https://bias-auditing-tool.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
         df_credit_not_encoded = df_credit
         df_credit = df_credit.drop(df_credit.columns[0], axis=1)
