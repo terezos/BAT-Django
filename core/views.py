@@ -264,19 +264,23 @@ class GermanBadAndGoodDistribution(APIView):
 class CustomDatasetMloperation(APIView):
 
     def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged):
-       
+        
         url="https://server3-test.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
         df_credit_not_encoded = df_credit
         df_credit = df_credit.drop(df_credit.columns[0], axis=1) 
         
         values = df_credit[analysis].value_counts()
-        willReturn = {}
-        data = {}
-        for i in range(len(values)):
-            data[values.index[i]] = round((values[i]/len(df_credit)) * 100,2)
         
+        keys = values.keys()
+        data = {}
+        for i in keys:
+            data[i] = round((values[i]/len(df_credit)) * 100,2)       
+
+               
+        willReturn = {}
         willReturn['analysis'] = data
+        
         target_col = df_credit.pop(target)
         df_credit.insert(len(df_credit.columns), target, target_col)
         
