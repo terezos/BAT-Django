@@ -307,12 +307,117 @@ class CustomDatasetMloperation(APIView):
         lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
         DILR = lr_pr_unpriv / lr_pr_priv
 
-        LR = {
+        willReturn['LR'] = {
         'model' : 'LR' ,    
         'acc' : round(acc,2) ,
-        'DILR' : round(DILR,2) ,
+        'disparate impact' : round(DILR,2) ,
         }
-        return Response(LR)
+
+        model = RandomForestClassifier(n_estimators=100, 
+                    bootstrap = True,
+                    max_features = 'sqrt')
+        model.fit(train_x,train_y)
+        acc = model.score(test_x,test_y)
+        preds = model.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DIRANDOMFOREST = lr_pr_unpriv / lr_pr_priv
+
+
+        willReturn['RF'] = {
+        'model' : 'RF' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DIRANDOMFOREST,2) ,   
+        }
+        
+
+        ## Desicion Tree
+        tree = DecisionTreeClassifier()
+        dt = tree.fit(train_x, train_y)
+        acc = dt.score(test_x,test_y)
+        preds = dt.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DITree = lr_pr_unpriv / lr_pr_priv
+
+
+        willReturn['DTree'] = {
+        'model' : 'DT' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DITree,2)    
+        }
+
+
+        # KNN
+        neigh = KNeighborsClassifier(n_neighbors=3)
+        neigh.fit(train_x, train_y)
+        acc = neigh.score(test_x,test_y)
+        preds = neigh.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DIkNN = lr_pr_unpriv / lr_pr_priv
+
+        
+        willReturn['KNN']  = {
+        'model' : 'KNN' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DIkNN,2),  
+        }
+      
+        ## Naive Bayes
+        gnb = GaussianNB()
+        gnb.fit(train_x, train_y)
+        acc = gnb.score(test_x,test_y)
+        preds = gnb.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DInaiveBayes = lr_pr_unpriv / lr_pr_priv
+
+        willReturn['NB'] = {
+        'model' : 'NB' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DInaiveBayes,2) ,  
+        }
+    
+
+        ## Adaboost
+        clf = AdaBoostClassifier(n_estimators=100, random_state=0)
+        clf.fit(train_x, train_y)
+        acc = clf.score(test_x,test_y)
+        preds = clf.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DIadaBoost = lr_pr_unpriv / lr_pr_priv
+
+        willReturn['ABoost'] = {
+        'model' : 'ABoost' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DIadaBoost,2), 
+        }
+
+
+        ## SVM
+        clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+        clf.fit(train_x, train_y)
+        acc = clf.score(test_x,test_y)
+        preds = clf.predict(data)
+        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        DISVM = lr_pr_unpriv / lr_pr_priv
+
+        willReturn['SVM'] = {
+        'model' : 'SVM' ,    
+        'acc' : round(acc,2) ,
+        'disparate impact' : round(DISVM,2),  
+        }
+
+        return Response(willReturn)
         # return HttpResponse(url)
         # return Response ()
 
