@@ -268,8 +268,9 @@ class CustomDatasetMloperation(APIView):
         url="https://server3-test.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
         df_credit_not_encoded = df_credit
-        df_credit = df_credit.drop(df_credit.columns[0], axis=1) 
-        
+        df_credit = df_credit.drop(df_credit.columns[0], axis=1)
+        willReturn = {}
+        willReturn['total_count'] = df_credit[df_credit.columns[0]].count()
         values = df_credit[analysis].value_counts()
         
         keys = values.keys()
@@ -278,9 +279,8 @@ class CustomDatasetMloperation(APIView):
             data[i] = round((values[i]/len(df_credit)) * 100,2)       
 
                
-        willReturn = {}
-        willReturn['analysis'] = data
         
+        willReturn['analysis'] = data
         target_col = df_credit.pop(target)
         df_credit.insert(len(df_credit.columns), target, target_col)
         
