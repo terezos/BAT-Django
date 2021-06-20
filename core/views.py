@@ -383,20 +383,20 @@ class CustomDatasetMloperation(APIView):
         }
       
         ## Naive Bayes
-        gnb = GaussianNB()
-        gnb.fit(train_x, train_y)
-        acc = gnb.score(test_x,test_y)
-        preds = gnb.predict(data)
-        pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
-        lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
-        lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
-        DInaiveBayes = lr_pr_unpriv / lr_pr_priv
+        # gnb = GaussianNB()
+        # gnb.fit(train_x, train_y)
+        # acc = gnb.score(test_x,test_y)
+        # preds = gnb.predict(data)
+        # pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
+        # lr_pr_unpriv = calc_prop(pred_df,sensitive,unprivileged,"Prediction",1)
+        # lr_pr_priv = calc_prop(pred_df,sensitive,privileged,"Prediction",1)
+        # DInaiveBayes = lr_pr_unpriv / lr_pr_priv
 
-        willReturn['NB'] = {
-        'model' : 'NB' ,    
-        'acc' : round(acc,2) ,
-        'disparate_impact' : round(DInaiveBayes,2) ,  
-        }
+        # willReturn['NB'] = {
+        # 'model' : 'NB' ,    
+        # 'acc' : round(acc,2) ,
+        # 'disparate_impact' : round(DInaiveBayes,2) ,  
+        # }
     
 
         ## Adaboost
