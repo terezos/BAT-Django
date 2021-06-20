@@ -14,5 +14,5 @@ urlpatterns = [
     path('credit-risk/gender',GermanGenderDistribution.as_view(),name= 'german-gender'),
     path('credit-risk/bad-good',GermanBadAndGoodDistribution.as_view(),name= 'german-badgood'),
     path('German/Ml',GermanMLoperations.as_view(),name='GermanmachineLearning'),
-    url(r'^custom/(?P<filename>[\w-]+)/(?P<sensitive>[\w-]+)/(?P<analysis>[\w-]+)/(?P<target>[\w-]+)/(?P<privileged>[\w-]+)/(?P<unprivileged>[\w-]+)/$',CustomDatasetMloperation.as_view()),
+    path('custom/<slug:filename>/<slug:sensitive>/<slug:analysis>/<slug:target>/<slug:privileged>/<slug:unprivileged>/',GermanMLoperations.as_view(),name='GermanmachineLearning'),
 ]
