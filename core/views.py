@@ -306,12 +306,13 @@ class CustomDatasetMloperation(APIView):
         for i in keys:
             data[i] = round((values[i]/len(df_credit)) * 100,2)       
         
-        data['privileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == privileged) & (df_credit_not_encoded[target] == 1)])
-        data['unprivileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == unprivileged) & (df_credit_not_encoded[target] == 1)])
+       
         
         willReturn['analysis'] = data
-        
-
+        data2 = {}
+        data2['privileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded["Pclass"] == 1) & (df_credit_not_encoded["Survived"] == 1)])
+        data2['unprivileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded["Pclass"] == 3) & (df_credit_not_encoded["Survived"] == 1)])
+        willReturn['check-priv'] = data2
         target_col = df_credit.pop(target)
         df_credit.insert(len(df_credit.columns), target, target_col)
         
