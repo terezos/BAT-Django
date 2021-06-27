@@ -29,8 +29,7 @@ from sklearn.preprocessing import StandardScaler
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 url="https://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv"
 raw_data = pd.read_csv(url)
-df = raw_data[((raw_data['days_b_screening_arrest'] <=30) & 
-(raw_data['days_b_screening_arrest'] >= -30) &
+df = raw_data[((raw_data['days_b_screening_arrest'] <=30) & (raw_data['days_b_screening_arrest'] >= -30) &
 (raw_data['is_recid'] != -1) &
 (raw_data['c_charge_degree'] != 'O') & 
 (raw_data['score_text'] != 'N/A'))]
@@ -44,25 +43,42 @@ def article_detail(request):
 class CompasRaceDistribution(APIView):
     def get(self,request,*args,**kwargs):
         values = df['race'].value_counts()
-        data = {
+        data = {}
+        data['analysis'] = {
                 'African-American' : round((values[0]/len(df)) * 100,2) ,
                 'Caucasian' : round((values[1]/len(df)) * 100,2),
                 'Hispanic' : round((values[2]/len(df)) * 100,2),
                 'Other' : round((values[3]/len(df)) * 100,2),
                 'Asian' : round((values[4]/len(df) )* 100,2) ,
-                'Native-Americans' : round(( values[5]/len(df) )* 100,2) ,
+                'Native-Americans' : round(( values[5]/len(df) )* 100,2) ,   
         }
+        
+        data['recid'] = {
+                'African-American' : len(df[(df['race'] == 'African-American') & (df['two_year_recid'] == 1)]) ,
+                'Caucasian' : len(df[(df['race'] == 'Caucasian') & (df['two_year_recid'] == 1)]),
+                'Hispanic' :len(df[(df['race'] == 'Hispanic') & (df['two_year_recid'] == 1)]),
+                'Other' : len(df[(df['race'] == 'Other') & (df['two_year_recid'] == 1)]),
+                'Asian' :len(df[(df['race'] == 'Asian') & (df['two_year_recid'] == 1)]) ,
+                'Native-Americans' : len(df[(df['race'] == 'Native-Americans') & (df['two_year_recid'] == 1)]) ,
+            }
+       
         return Response(data)
 
 class CompasGenderDistribution(APIView):
     def get(self,request,*args,**kwargs):
         values = df['sex'].value_counts()
-        goin = {
+        data = {}
+        data['analysis'] = {
                 'Male' : round((values[0]/len(df)) * 100,2) ,
                 'Female' : round((values[1]/len(df)) * 100,2)
-                
         }
-        return Response(goin)
+
+        data['recid'] = {
+                'Male' : len(df[(df['sex'] == 'Male') & (df['two_year_recid'] == 1)]),
+                'Female': len(df[(df['sex'] == 'Female') & (df['two_year_recid'] == 1)]),
+        }
+
+        return Response(data)
         
 def calc_prop(data, group_col, group, output_col, output_val):
     new = data[data[group_col] == group]
@@ -70,9 +86,9 @@ def calc_prop(data, group_col, group, output_col, output_val):
 
 class CompasMLoperations(APIView):
     def get(self,request,*args,**kwargs):
+                goin = []
                 data = df_encoded.drop(['Two_yr_Recidivism'],axis=1)
                 y = df_encoded['Two_yr_Recidivism']
-                goin = []
                 train_x, test_x, train_y, test_y = train_test_split(data, y, test_size=0.25, shuffle=True, random_state=42)
                 ## LOGISTIC REGRESSION
                 lr = LogisticRegression()
@@ -86,8 +102,9 @@ class CompasMLoperations(APIView):
                 pred_gender_df = pd.DataFrame({"sex":df["sex"],"Prediction":preds})
                 lr_pr_priv_gend = calc_prop(pred_gender_df,"sex",'Female',"Prediction",1)
                 lr_pr_unpriv_gend = calc_prop(pred_gender_df,"sex",'Male',"Prediction",1) 
+                
                 DIGENDERCOMPAS = lr_pr_unpriv_gend / lr_pr_priv_gend
-                LR = {
+                LR = {  
                 'model' : 'Logistic Regression' ,    
                 'acc' : round(acc,2) ,
                 'DIRace' : round(DIRACECOMPAS,2) ,
@@ -242,24 +259,35 @@ class GermanGenderDistribution(APIView):
     def get(self,request,*args,**kwargs):
         df_credit = pd.read_csv(SITE_ROOT + '/csvs/german_credit_data.csv')
         values = df_credit['Sex'].value_counts()
-        gender_data = {
+        data = {}
+        data['analysis'] = {
                 'Male' : round((values[0]/len(df_credit)) * 100,2) ,
-                'Female' : round((values[1]/len(df_credit)) * 100,2)
-                
+                'Female' : round((values[1]/len(df_credit)) * 100,2)    
         }
-        return Response(gender_data)
-class GermanBadAndGoodDistribution(APIView):
+        data['risk-gender'] = {
+            'Male' : len(df_credit[(df_credit['Sex'] == 'male') & (df_credit['Risk'] == 'good')]),
+            'Female': len(df_credit[(df_credit['Sex'] == 'female') & (df_credit['Risk'] == 'good')]),
+        }
+        return Response(data)
+class GermanAgeDistribution(APIView):
 
     def get(self,request,*args,**kwargs):
         df_credit = pd.read_csv(SITE_ROOT + '/csvs/german_credit_data.csv')
         x = df_credit[df_credit["Risk"]== 'bad']["Risk"].value_counts().index.values
-
-        badgood_data = {
-             'Good' :  df_credit[df_credit["Risk"]== 'good']["Risk"].value_counts().values,
-             'Bad' : df_credit[df_credit["Risk"]== 'bad']["Risk"].value_counts().values
+        data = {}
+        data['analysis'] = {
+             '18-25' :  len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25)]),
+             '26-35' :  len(df_credit[(df_credit['Age'] > 26) & (df_credit['Age'] <= 35)]) ,
+             '36-120' : len(df_credit[(df_credit['Age'] > 35)])
+        }
+        
+        data['risk-age'] = {
+            '18-25': len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25) & (df_credit['Risk'] == 'good')]),
+            '26-35': len(df_credit[(df_credit['Age'] > 25) & (df_credit['Age'] <= 35) & (df_credit['Risk'] == 'good')]),
+            '36-120': len(df_credit[(df_credit['Age'] > 35) & (df_credit['Risk'] == 'good')])
         }
 
-        return Response(badgood_data)
+        return Response(data)
 
 class CustomDatasetMloperation(APIView):
 
@@ -277,10 +305,13 @@ class CustomDatasetMloperation(APIView):
         data = {}
         for i in keys:
             data[i] = round((values[i]/len(df_credit)) * 100,2)       
-
-               
+        
+        data['privileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == privileged) & (df_credit_not_encoded[target] == 1)])
+        data['unprivileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == unprivileged) & (df_credit_not_encoded[target] == 1)])
         
         willReturn['analysis'] = data
+        
+
         target_col = df_credit.pop(target)
         df_credit.insert(len(df_credit.columns), target, target_col)
         
