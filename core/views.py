@@ -291,12 +291,14 @@ class GermanAgeDistribution(APIView):
 
 class CustomDatasetMloperation(APIView):
 
-    def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged):
+    def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged,dropFirstColumn,encode):
         
         url="https://bias-auditing-tool.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
         df_credit_not_encoded = df_credit
-        df_credit = df_credit.drop(df_credit.columns[0], axis=1)
+        if(dropFirstColumn):
+            df_credit = df_credit.drop(df_credit.columns[0], axis=1)
+
         willReturn = {}
         willReturn['total_count'] = df_credit[df_credit.columns[0]].count()
         values = df_credit[analysis].value_counts()
@@ -309,10 +311,23 @@ class CustomDatasetMloperation(APIView):
        
         
         willReturn['analysis'] = data
+        
         data2 = {}
-        data2['privileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded["Pclass"] == 1) & (df_credit_not_encoded["Survived"] == 1)])
-        data2['unprivileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded["Pclass"] == 3) & (df_credit_not_encoded["Survived"] == 1)])
+
+        answerUn = unprivileged.isnumeric()
+        answerPr = privileged.isnumeric()
+
+        if(answerUn):
+            unprivileged = int(unprivileged)
+
+        if(answerPr):
+            privileged = int(privileged)
+
+            
+        data2['privileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == privileged) & (df_credit_not_encoded[target] == 1)])
+        data2['unprivileged'] =  len(df_credit_not_encoded[(df_credit_not_encoded[sensitive] == unprivileged) & (df_credit_not_encoded[target] == 1)])
         willReturn['check-priv'] = data2
+        
         target_col = df_credit.pop(target)
         df_credit.insert(len(df_credit.columns), target, target_col)
         
@@ -320,12 +335,13 @@ class CustomDatasetMloperation(APIView):
         for column in df_credit:
             df_credit[column] = df_credit[column].fillna('no_inf')
         
-        old_columns = list(df_credit)
-        for column in df_credit:
-            df_credit = df_credit.merge(pd.get_dummies(df_credit[column], drop_first=True, prefix=column+'_new'), left_index=True, right_index=True)
-    
-        for cols in old_columns:
-            del df_credit[cols] 
+        if(encode):
+            old_columns = list(df_credit)
+            for column in df_credit:
+                df_credit = df_credit.merge(pd.get_dummies(df_credit[column], drop_first=True, prefix=column+'_new'), left_index=True, right_index=True)
+        
+            for cols in old_columns:
+                del df_credit[cols] 
         
         data = df_credit.drop(df_credit.columns[len(df_credit.columns) -1 ],axis=1)
         y = df_credit[df_credit.columns[len(df_credit.columns)-1 ]]
@@ -338,14 +354,7 @@ class CustomDatasetMloperation(APIView):
         acc = model.score(test_x,test_y)
         preds = model.predict(data)
         
-        answerUn = unprivileged.isnumeric()
-        answerPr = privileged.isnumeric()
-
-        if(answerUn):
-            unprivileged = int(unprivileged)
-
-        if(answerPr):
-            privileged = int(privileged)
+        
         
         pred_df = pd.DataFrame({sensitive:df_credit_not_encoded[sensitive],"Prediction":preds})
         
