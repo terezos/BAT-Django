@@ -271,9 +271,16 @@ class GermanGenderDistribution(APIView):
                 'Male' : round((values[0]/len(df_credit)) * 100,2) ,
                 'Female' : round((values[1]/len(df_credit)) * 100,2)    
         }
+
+        males = len(df_credit[(df_credit['Sex'] == 'male') & (df_credit['Risk'] == 'good')]) 
+        female = len(df_credit[(df_credit['Sex'] == 'female') & (df_credit['Risk'] == 'good')])
+        males = round((males/values[0])*100,2)
+        female = round((female/values[1])*100,2)
+
+
         data['risk-gender'] = {
-            'Male' : len(df_credit[(df_credit['Sex'] == 'male') & (df_credit['Risk'] == 'good')]),
-            'Female': len(df_credit[(df_credit['Sex'] == 'female') & (df_credit['Risk'] == 'good')]),
+            'Male' : males,
+            'Female': female,
         }
         return Response(data)
 class GermanAgeDistribution(APIView):
@@ -282,17 +289,28 @@ class GermanAgeDistribution(APIView):
         df_credit = pd.read_csv(SITE_ROOT + '/csvs/german_credit_data.csv')
         x = df_credit[df_credit["Risk"]== 'bad']["Risk"].value_counts().index.values
         data = {}
+        
+        
+        total_count = df_credit[df_credit.columns[0]].count()
+
         data['analysis'] = {
-             '18-25' :  len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25)]),
-             '26-35' :  len(df_credit[(df_credit['Age'] > 26) & (df_credit['Age'] <= 35)]) ,
-             '36-120' : len(df_credit[(df_credit['Age'] > 35)])
+            '18-25': round((len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25)])/ total_count) * 100,2),
+            '26-35': round((len(df_credit[(df_credit['Age'] > 25) & (df_credit['Age'] <= 35)])/ total_count) * 100,2),
+            '36-120': round((len(df_credit[(df_credit['Age'] > 35)])/ total_count) * 100,2)
         }
         
+        age18_25 = round((len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25) & (df_credit['Risk'] == 'good') ]) / total_count) * 100,2)
+        age26_35 = round((len(df_credit[(df_credit['Age'] >= 25) & (df_credit['Age'] <= 35) & (df_credit['Risk'] == 'good')]) / total_count) * 100,2)
+        age36_120 = round((len(df_credit[(df_credit['Age'] > 35) & (df_credit['Risk'] == 'good')]) / total_count) * 100,2)
+        
+        
         data['risk-age'] = {
-            '18-25': len(df_credit[(df_credit['Age'] >= 18) & (df_credit['Age'] <= 25) & (df_credit['Risk'] == 'good')]),
-            '26-35': len(df_credit[(df_credit['Age'] > 25) & (df_credit['Age'] <= 35) & (df_credit['Risk'] == 'good')]),
-            '36-120': len(df_credit[(df_credit['Age'] > 35) & (df_credit['Risk'] == 'good')])
+             '18-25' : age18_25,
+             '26-35' : age26_35,
+             '36-120': age36_120 
         }
+        
+       
 
         return Response(data)
 
