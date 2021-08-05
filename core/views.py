@@ -73,9 +73,15 @@ class CompasGenderDistribution(APIView):
                 'Female' : round((values[1]/len(df)) * 100,2)
         }
 
+
+        males = len(df[(df['sex'] == 'Male') & (df['two_year_recid'] == 1)]) 
+        female = len(df[(df['sex'] == 'Female') & (df['two_year_recid'] == 1)])
+        males = (males/data['analysis']['Male']*100,2)
+        female = (female/data['analysis']['Female']*100,2)
+
         data['recid'] = {
-                'Male' : len(df[(df['sex'] == 'Male') & (df['two_year_recid'] == 1)]),
-                'Female': len(df[(df['sex'] == 'Female') & (df['two_year_recid'] == 1)]),
+                'Male' : males ,
+                'Female': female,
         }
 
         return Response(data)
