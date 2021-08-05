@@ -55,12 +55,12 @@ class CompasRaceDistribution(APIView):
 
         
         data['recid'] = {
-                'African-American' : round((len(df[(df['race'] == 'African-American') & (df['two_year_recid'] == 1)]))/values[0])*100,2) ,
-                'Caucasian' : round(len(df[(df['race'] == 'Caucasian') & (df['two_year_recid'] == 1)]))/values[1])*100,2),
-                'Hispanic' :round(len(df[(df['race'] == 'Hispanic') & (df['two_year_recid'] == 1)]))/values[2])*100,2),
-                'Other' : round(len(df[(df['race'] == 'Other') & (df['two_year_recid'] == 1)]))/values[3])*100,2),
-                'Asian' :round(len(df[(df['race'] == 'Asian') & (df['two_year_recid'] == 1)]))/values[4])*100,2) ,
-                'Native-Americans' : round(len(df[(df['race'] == 'Native-Americans') & (df['two_year_recid'] == 1)]))/values[5])*100,2) ,
+                'African-American' : round(((len(df[(df['race'] == 'African-American') & (df['two_year_recid'] == 1)]))/values[0])*100,2) ,
+                'Caucasian' : round(((len(df[(df['race'] == 'Caucasian') & (df['two_year_recid'] == 1)]))/values[1])*100,2),
+                'Hispanic' :round(((len(df[(df['race'] == 'Hispanic') & (df['two_year_recid'] == 1)]))/values[2])*100,2),
+                'Other' : round(((len(df[(df['race'] == 'Other') & (df['two_year_recid'] == 1)]))/values[3])*100,2),
+                'Asian' :round(((len(df[(df['race'] == 'Asian') & (df['two_year_recid'] == 1)]))/values[4])*100,2) ,
+                'Native-Americans' : round(((len(df[(df['race'] == 'Native-Americans') & (df['two_year_recid'] == 1)]))/values[5])*100,2) ,
             }
        
         return Response(data)
