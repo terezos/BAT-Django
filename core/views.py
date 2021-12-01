@@ -316,7 +316,7 @@ class GermanAgeDistribution(APIView):
 
 class CustomDatasetMloperation(APIView):
 
-    def get(self,request,filename,sensitive,analysis,target,privileged,unprivileged,dropFirstColumn,encode):
+    def get(self,request):
     
         filename = request.GET.get('filename')
         sensitive = request.GET.get('sensitive')
@@ -326,6 +326,8 @@ class CustomDatasetMloperation(APIView):
         unprivileged = request.GET.get('unprivileged')
         dropFirstColumn = request.GET.get('dropFirstColumn')
         encode = request.GET.get('encode')
+
+       
     
         url="https://bias-auditing-tool.herokuapp.com/files/" + filename + '.csv' 
         df_credit = pd.read_csv(url)
