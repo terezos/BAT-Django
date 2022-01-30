@@ -167,7 +167,7 @@ class CompasMLoperations(APIView):
                 goin.append(DTree)
 
                 # KNN
-                neigh = KNeighborsClassifier(n_neighbors=3)
+                neigh = KNeighborsClassifier(n_neighbors=13)
                 neigh.fit(train_x, train_y)
                 acc = neigh.score(test_x,test_y)
                 preds = neigh.predict(data)
